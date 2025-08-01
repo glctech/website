@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<!-- Hide /content -->
+
+
+  // Esconde o caminho depois da barra
+if (window.location.pathname !== '/') {
+  window.history.replaceState({}, document.title, '/');
+}
+
+// Remove o # da URL sem recarregar a página, mantendo a posição atual
+function removeHash() {
+  history.replaceState(null, document.title, window.location.pathname + window.location.search);
+}
+
+// Escuta clicks nos links com href começando com #
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    setTimeout(removeHash, 100);
+  });
+});
+
+  <!-- Hide /content end-->
+
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Terms of Use | GLCTech</title>
