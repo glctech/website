@@ -2,6 +2,18 @@
 <html lang="en">
 
 <head>
+
+<!-- Hide /content -->
+  <script>
+  // Só executa se tiver algo depois da barra na URL
+  if (window.location.pathname !== '/') {
+    // Substitui a URL para mostrar só o domínio com "/"
+    window.history.replaceState({}, document.title, '/');
+  }
+</script>
+
+  <!-- Hide /content end-->
+  
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>GLCTech Monitoramento e Segurança em TI</title>
