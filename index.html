@@ -2,28 +2,6 @@
 <html lang="en">
 
 <head>
-
- <script>
-    // Esconde o caminho depois da barra
-    if (window.location.pathname !== '/') {
-      window.history.replaceState({}, document.title, '/');
-    }
-
-    // Remove o # da URL sem recarregar a página, mantendo a posição atual
-    function removeHash() {
-      history.replaceState(null, document.title, window.location.pathname + window.location.search);
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      // Escuta clicks nos links com href começando com #
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-          setTimeout(removeHash, 100);
-        });
-      });
-    });
-  </script>
-  
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>GLCTech Monitoramento e Segurança em TI</title>
@@ -585,6 +563,47 @@
 </section>
 <!-- /Kaspersky Section -->
 
+
+<!-- /VEEAM BACKUP -->
+
+<section id="veeam" class="services section light-background">
+
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Soluções Empresariais Veeam</h2>
+    <p><span>Garanta a continuidade dos negócios com</span> <span class="description-title">proteção e recuperação de dados confiável</span></p>
+  </div>
+
+  <div class="container">
+
+    <div class="row gy-4 align-items-center">
+
+      <div class="col-lg-6" data-aos="fade-right">
+        <img src="./img/veeam.png" alt="Veeam Backup Enterprise" class="img-fluid">
+      </div>
+
+      <div class="col-lg-6" data-aos="fade-left">
+        <h3>Backup e recuperação de dados para empresas modernas</h3>
+        <p>
+          A Veeam é líder em soluções de backup, recuperação e gerenciamento de dados em ambientes físicos, virtuais e na nuvem. Ideal para empresas que precisam garantir disponibilidade, continuidade e conformidade.
+        </p>
+        <ul>
+          <li><i class="bi bi-hdd-stack"></i> Backup confiável para servidores, VMs e aplicações</li>
+          <li><i class="bi bi-cloud-arrow-down"></i> Recuperação rápida em ambientes locais e na nuvem</li>
+          <li><i class="bi bi-diagram-3"></i> Plataforma unificada para gerenciamento de dados</li>
+        </ul>
+        <div class="mt-4">
+          <a href="https://www.veeam.com/br" target="_blank" class="btn btn-success me-2">Ver soluções no site oficial</a>
+          <a href="mailto:contato@glctech.com.br" class="btn btn-outline-dark">Solicitar proposta personalizada</a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- /VEAM BACKUP -->
 
 
 
@@ -1227,23 +1246,6 @@
 
 
 
- <div class="col-lg-4 col-md-8">
-          <h4></h4>
-          <p></p>
-          <div class="social-links d-flex">
-            <!--<a href=""><i class="bi bi-twitter-x"></i></a>-->
-           <img src="./img/kaspersky.png" width="250">
-          </div>
-        </div>
-
-
-  <div class="col-lg-4 col-md-12">
-          <h4></h4>
-          <div class="social-links d-flex">
-            <!--<a href=""><i class="bi bi-twitter-x"></i></a>-->
-           <img src="./img/veeam.png" width="200">
-          </div>
-        </div>
 
 
 
