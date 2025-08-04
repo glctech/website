@@ -1,11 +1,8 @@
-<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Painel de Faturamento - GLCTech</title>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,6 +11,7 @@
     }
     h1 {
       color: #c00;
+      margin-bottom: 30px;
     }
     table {
       width: 100%;
@@ -28,8 +26,14 @@
     th {
       background-color: #eee;
     }
-    input[type="number"] {
-      width: 90px;
+    tr.group-header th {
+      background-color: #c00;
+      color: white;
+      text-align: left;
+      font-size: 1.1em;
+      padding-left: 15px;
+      border-top: 3px solid #900;
+      border-bottom: 3px solid #900;
     }
     .highlight {
       font-weight: bold;
@@ -37,27 +41,53 @@
     }
     .totals {
       font-size: 1.2em;
+      margin-bottom: 40px;
     }
-    #chart_div {
-      width: 100%;
+    #charts-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 50px;
+    }
+    #chart_div, #chart_totais {
+      flex: 1 1 350px;
+      max-width: 700px;
       height: 400px;
-      margin-top: 40px;
     }
-    #generatePDF {
-      background-color: #c00;
+    input[type="number"] {
+      width: 90px;
+      font-size: 1em;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 4px;
+    }
+    #btn-gerar-pdf {
+      display: block;
+      margin: 0 auto 40px auto;
+      padding: 12px 30px;
+      font-size: 1.1em;
       color: white;
-      padding: 10px 20px;
+      background-color: #c00;
       border: none;
-      cursor: pointer;
-      font-weight: bold;
       border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #btn-gerar-pdf:hover {
+      background-color: #900;
     }
   </style>
+
+  <!-- Google Charts -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <!-- jsPDF and jsPDF AutoTable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
   <h1>Painel de Faturamento - GLCTech</h1>
-
-  <img src="/mnt/data/WhatsApp Image 2019-08-06 at 22.53.27.jpeg" alt="Logo GLCTech" width="250" />
 
   <table id="faturamento">
     <thead>
@@ -69,40 +99,47 @@
       </tr>
     </thead>
     <tbody>
+      <tr class="group-header"><th colspan="4">Licenças</th></tr>
       <tr>
-        <td>Monitoramento Zabbix</td>
-        <td><input type="number" value="500" class="preco"></td>
-        <td><input type="number" value="4" class="quantidade"></td>
-        <td class="mensal"></td>
-      </tr>
-      <tr>
-        <td>Setup Grafana</td>
-        <td><input type="number" value="2000" class="preco"></td>
-        <td><input type="number" value="2" class="quantidade"></td>
-        <td class="mensal"></td>
-      </tr>
-      <tr>
-        <td>Licença Kaspersky (10 dispositivos)</td>
-        <td><input type="number" value="800" class="preco dividido"></td>
-        <td><input type="number" value="3" class="quantidade"></td>
+        <td>Licença Kaspersky (anual ÷12)</td>
+        <td><input type="number" min="0" step="0.01" value="800" class="input-preco" /></td>
+        <td><input type="number" min="0" step="1" value="3" class="input-quantidade" /></td>
         <td class="mensal dividido"></td>
       </tr>
+
+      <tr class="group-header"><th colspan="4">Softwares</th></tr>
       <tr>
-        <td>Consultoria Técnica</td>
-        <td><input type="number" value="150" class="preco"></td>
-        <td><input type="number" value="40" class="quantidade"></td>
+        <td>Setup Grafana</td>
+        <td><input type="number" min="0" step="0.01" value="2000" class="input-preco" /></td>
+        <td><input type="number" min="0" step="1" value="2" class="input-quantidade" /></td>
+        <td class="mensal"></td>
+      </tr>
+
+      <tr class="group-header"><th colspan="4">Serviços</th></tr>
+      <tr>
+        <td>Monitoramento Zabbix</td>
+        <td><input type="number" min="0" step="0.01" value="500" class="input-preco" /></td>
+        <td><input type="number" min="0" step="1" value="4" class="input-quantidade" /></td>
         <td class="mensal"></td>
       </tr>
       <tr>
         <td>Serviços AWS</td>
-        <td><input type="number" value="1000" class="preco"></td>
-        <td><input type="number" value="2" class="quantidade"></td>
+        <td><input type="number" min="0" step="0.01" value="1000" class="input-preco" /></td>
+        <td><input type="number" min="0" step="1" value="2" class="input-quantidade" /></td>
         <td class="mensal"></td>
       </tr>
       <tr>
-        <td>Veeam Backup Essentials</td>
-        <td><input type="number" value="4000" class="preco"></td>
-        <td><input type="number" value="2" class="quantidade"></td>
+        <td>Veeam Backup</td>
+        <td><input type="number" min="0" step="0.01" value="1500" class="input-preco" /></td>
+        <td><input type="number" min="0" step="1" value="2" class="input-quantidade" /></td>
+        <td class="mensal"></td>
+      </tr>
+
+      <tr class="group-header"><th colspan="4">Consultoria</th></tr>
+      <tr>
+        <td>Consultoria Técnica (horas)</td>
+        <td><input type="number" min="0" step="0.01" value="150" class="input-preco" /></td>
+        <td><input type="number" min="0" step="1" value="40" class="input-quantidade" /></td>
         <td class="mensal"></td>
       </tr>
     </tbody>
@@ -114,100 +151,205 @@
     <p>Total Anual: <span id="anualTotal" class="highlight"></span></p>
   </div>
 
-  <button id="generatePDF">Gerar Proposta em PDF</button>
+  <div id="charts-container">
+    <div id="chart_div"></div> <!-- gráfico mensal por serviço -->
+    <div id="chart_totais"></div> <!-- gráfico totais -->
+  </div>
 
-  <div id="chart_div"></div>
+  <button id="btn-gerar-pdf">Gerar Relatório em PDF</button>
 
   <script>
-    google.charts.load('current', { packages: ['corechart'] });
+    // Formatação moeda BRL
+    function formatBRL(value) {
+      return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    }
 
-    function calcularFaturamento() {
+    // Recalcula totais e redesenha gráficos
+    function recalcular() {
       const rows = document.querySelectorAll("#faturamento tbody tr");
       let totalMensal = 0;
-      let chartData = [['Serviço', 'Faturamento']];
+      const faturamentoPorServico = [];
 
       rows.forEach(row => {
-        const nome = row.children[0].innerText;
-        const preco = parseFloat(row.querySelector('.preco').value);
-        const quantidade = parseInt(row.querySelector('.quantidade').value);
+        if(row.classList.contains("group-header")) return;
 
-        let totalLinha = preco * quantidade;
-        if (row.querySelector(".preco.dividido")) {
-          totalLinha /= 12;
+        const servico = row.children[0].innerText;
+        const precoInput = row.querySelector(".input-preco");
+        const quantidadeInput = row.querySelector(".input-quantidade");
+
+        const preco = parseFloat(precoInput.value.replace(",", ".")) || 0;
+        const quantidade = parseInt(quantidadeInput.value) || 0;
+
+        let totalLinha;
+        if (row.querySelector(".dividido")) {
+          totalLinha = (preco * quantidade) / 12;
+        } else {
+          totalLinha = preco * quantidade;
         }
 
-        row.querySelector(".mensal").innerText = totalLinha.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        row.querySelector(".mensal").innerText = formatBRL(totalLinha);
+        faturamentoPorServico.push([servico, totalLinha]);
         totalMensal += totalLinha;
-        chartData.push([nome, totalLinha]);
       });
 
-      document.getElementById("mensalTotal").innerText = totalMensal.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-      document.getElementById("trimestralTotal").innerText = (totalMensal * 3).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-      document.getElementById("anualTotal").innerText = (totalMensal * 12).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+      document.getElementById("mensalTotal").innerText = formatBRL(totalMensal);
+      document.getElementById("trimestralTotal").innerText = formatBRL(totalMensal * 3);
+      document.getElementById("anualTotal").innerText = formatBRL(totalMensal * 12);
 
-      drawChart(chartData);
+      desenharGraficos(faturamentoPorServico, totalMensal);
     }
 
-    function drawChart(dataArray) {
-      const data = google.visualization.arrayToDataTable(dataArray);
-      const options = {
-        title: 'Distribuição do Faturamento Mensal',
-        pieHole: 0.4,
-        colors: ['#c00', '#333', '#999', '#0a0', '#0cc', '#f90']
+    // Google Charts
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(() => {
+      document.querySelectorAll(".input-preco, .input-quantidade").forEach(input => {
+        input.addEventListener("input", recalcular);
+      });
+      recalcular();
+    });
+
+    function desenharGraficos(faturamentoPorServico, totalMensal) {
+      var dataServico = new google.visualization.DataTable();
+      dataServico.addColumn('string', 'Serviço');
+      dataServico.addColumn('number', 'Faturamento Mensal (R$)');
+      dataServico.addRows(faturamentoPorServico);
+
+      var optionsServico = {
+        title: 'Faturamento Mensal por Serviço',
+        legend: { position: 'none' },
+        colors: ['#c00'],
+        hAxis: {
+          title: 'Serviço',
+          textStyle: {fontSize: 12},
+          slantedText: true,
+          slantedTextAngle: 45
+        },
+        vAxis: {
+          title: 'Valor (R$)',
+          format: 'currency',
+          minValue: 0
+        },
+        chartArea: {width: '70%', height: '70%'}
       };
-      const chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-      chart.draw(data, options);
+
+      var chartServico = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+      chartServico.draw(dataServico, optionsServico);
+
+      var dataTotais = google.visualization.arrayToDataTable([
+        ['Período', 'Faturamento (R$)'],
+        ['Mensal', totalMensal],
+        ['Trimestral', totalMensal * 3],
+        ['Anual', totalMensal * 12]
+      ]);
+
+      var optionsTotais = {
+        title: 'Faturamento Total',
+        legend: { position: 'none' },
+        colors: ['#007b00'],
+        hAxis: {
+          title: 'Período',
+        },
+        vAxis: {
+          title: 'Valor (R$)',
+          format: 'currency',
+          minValue: 0
+        },
+        chartArea: {width: '70%', height: '70%'}
+      };
+
+      var chartTotais = new google.visualization.ColumnChart(document.getElementById('chart_totais'));
+      chartTotais.draw(dataTotais, optionsTotais);
     }
 
-    document.querySelectorAll('input').forEach(input => {
-      input.addEventListener('input', calcularFaturamento);
-    });
-
-    document.getElementById("generatePDF").addEventListener("click", async () => {
-      const {{ jsPDF }} = window.jspdf;
-      const doc = new jsPDF();
-      let y = 10;
-
-      // Adiciona logotipo
-      const logoImg = new Image();
-      logoImg.src = '/mnt/data/WhatsApp Image 2019-08-06 at 22.53.27.jpeg';
-      await new Promise(resolve => {
-        logoImg.onload = () => {
-          doc.addImage(logoImg, 'JPEG', 10, y, 50, 20);
-          resolve();
+    // Função para converter imagem URL para base64 (Promise)
+    function getBase64ImageFromURL(url) {
+      return new Promise((resolve, reject) => {
+        var img = new Image();
+        img.setAttribute('crossOrigin', 'anonymous'); // para evitar CORS
+        img.onload = () => {
+          var canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          var dataURL = canvas.toDataURL('image/png');
+          resolve(dataURL);
         };
+        img.onerror = error => reject(error);
+        img.src = url;
       });
+    }
 
-      y += 30;
-      doc.setFontSize(14);
-      doc.text("Proposta Comercial - GLCTech", 10, y);
-      y += 10;
+    // Gera PDF com jsPDF e AutoTable, incluindo logo
+    document.getElementById("btn-gerar-pdf").addEventListener("click", async () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
 
-      const rows = document.querySelectorAll("#faturamento tbody tr");
-      rows.forEach(row => {
-        const servico = row.children[0].innerText;
-        const preco = row.querySelector('.preco').value;
-        const quantidade = row.querySelector('.quantidade').value;
-        const total = row.children[3].innerText;
-        doc.setFontSize(11);
-        doc.text(`- ${servico}: R$ ${preco} x ${quantidade} = ${total}`, 10, y);
-        y += 8;
-      });
+      // URL do logo
+      const logoURL = "https://glctech.com.br/img/logo7.png";
 
-      y += 10;
-      doc.setFontSize(12);
-      doc.text("Resumo:", 10, y);
-      y += 8;
-      doc.text("Total Mensal: " + document.getElementById("mensalTotal").innerText, 10, y);
-      y += 8;
-      doc.text("Total Trimestral: " + document.getElementById("trimestralTotal").innerText, 10, y);
-      y += 8;
-      doc.text("Total Anual: " + document.getElementById("anualTotal").innerText, 10, y);
+      try {
+        const logoBase64 = await getBase64ImageFromURL(logoURL);
 
-      doc.save("proposta-glctech.pdf");
+        // Desenha o logo no PDF (x=14, y=10, largura=50, altura proporcional)
+        doc.addImage(logoBase64, 'PNG', 14, 10, 50, 0);
+
+        // Título abaixo do logo
+        doc.setFontSize(18);
+        doc.setTextColor("#c00");
+        doc.text("Relatório de Faturamento - GLCTech", 14, 65);
+
+        // Começa a tabela a partir daqui
+        let currentY = 75;
+
+        // Extrair dados da tabela, incluindo grupos
+        const rows = [];
+        const tbodyRows = document.querySelectorAll("#faturamento tbody tr");
+        tbodyRows.forEach(row => {
+          if(row.classList.contains("group-header")) {
+            rows.push([{content: row.children[0].innerText, colSpan: 4, styles: {fillColor: [192, 0, 0], textColor: 255, halign: 'left', fontStyle: 'bold'}}]);
+          } else {
+            const servico = row.children[0].innerText;
+            const preco = row.querySelector(".input-preco").value;
+            const quantidade = row.querySelector(".input-quantidade").value;
+            const faturamento = row.querySelector(".mensal").innerText;
+            rows.push([servico, preco, quantidade, faturamento]);
+          }
+        });
+
+        doc.autoTable({
+          startY: currentY,
+          head: [['Serviço', 'Preço Unitário (R$)', 'Quantidade/Mês', 'Faturamento Mensal (R$)']],
+          body: rows,
+          styles: {fontSize: 10, cellPadding: 3},
+          headStyles: {fillColor: [238,238,238], textColor: 0, fontStyle: 'bold'},
+          margin: {left:14, right:14},
+          theme: 'striped',
+        });
+
+        currentY = doc.lastAutoTable.finalY + 10;
+
+        // Totais
+        doc.setFontSize(14);
+        doc.setTextColor(0);
+        doc.text("Totais", 14, currentY);
+
+        doc.setFontSize(12);
+        const mensal = document.getElementById("mensalTotal").innerText;
+        const trimestral = document.getElementById("trimestralTotal").innerText;
+        const anual = document.getElementById("anualTotal").innerText;
+
+        doc.text(`Total Mensal: ${mensal}`, 14, currentY + 10);
+        doc.text(`Total Trimestral: ${trimestral}`, 14, currentY + 20);
+        doc.text(`Total Anual: ${anual}`, 14, currentY + 30);
+
+        // Salva PDF
+        doc.save("relatorio_faturamento_glctech.pdf");
+
+      } catch (error) {
+        alert("Erro ao carregar o logo para o PDF: " + error);
+      }
     });
-
-    google.charts.setOnLoadCallback(calcularFaturamento);
   </script>
 </body>
 </html>
