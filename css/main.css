@@ -13,7 +13,7 @@
 /* Fonts */
 :root {
   --default-font: "Roboto",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --heading-font: "Montserrat",  sans-serif;
+  --heading-font: "Roboto",  sans-serif;
   --nav-font: "Open Sans",  sans-serif;
 }
 
@@ -1176,6 +1176,11 @@ section,
 }
 
 .clients .swiper-slide img {
+  max-height: 110px;   /* altura máxima razoável */
+  max-width: 180px;   /* largura máxima razoável */
+  object-fit: contain; /* mantém proporção sem distorcer */
+  margin: 0 auto;     /* centraliza os logos */
+  display: block;
   transition: 0.3s;
 }
 
@@ -1967,6 +1972,38 @@ section,
 /*--------------------------------------------------------------
 # Starter Section Section
 --------------------------------------------------------------*/
-.starter-section {
-  /* Add your styles here */
+
+/* Fundos distintos para os slides */
+.slide-bg-zabbix .parallax-bg {
+  background-image: url('https://source.unsplash.com/1600x900/?network,monitoring');
+  background-size: cover;
+  background-position: center;
+}
+
+.slide-bg-veeam .parallax-bg {
+  background-image: url('https://source.unsplash.com/1600x900/?backup,cloud');
+  background-size: cover;
+  background-position: center;
+}
+
+.slide-bg-aws .parallax-bg {
+  background-image: url('https://source.unsplash.com/1600x900/?cloud,technology');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Overlay para melhorar leitura do texto */
+.parallax-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1;
+}
+
+.hero-slider .content {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  text-shadow: 0px 2px 8px rgba(0, 0, 0, 0.6);
 }
